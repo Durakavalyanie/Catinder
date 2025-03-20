@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handleAction({required bool liked}) {
-    _loadNewCat();
     if (liked) {
       _swiperController.swipe(CardSwiperDirection.right);
     } else {
@@ -78,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       cardsCount: _currentCat != null ? 1 : 0,
                       numberOfCardsDisplayed: 1,
                       onSwipe: (index, previousIndex, direction) {
+                        _loadNewCat();
                         if (direction == CardSwiperDirection.right) {
                           setState(() {
                             _likeCount++;
