@@ -1,16 +1,24 @@
-# catinder
+# Catinder
 
-A new Flutter project.
+Тиндер котов
 
-## Getting Started
+## Функционал
 
-This project is a starting point for a Flutter application.
+1.На главном экране отображается случайное изображение котика и название его породы
 
-A few resources to get you started if this is your first Flutter project:
+2.Изображение котика можно свайпнуть или смахнуть влево или вправо
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+3.Так же есть две кнопки: лайк/дизлайк
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+4.Смахивание, свайп или нажатие на кнопку должно сменять котика на нового
+
+5.Если котика лайкнули (лайк или свайп вправо), то на экране должен увеличиваться счетчик
+
+6.Если нажать на само изображение котика, то должен открываться новый экран с детальным описанием
+
+7.На экране детального описания отображается то же изображение котика, плюс отображается вся информация про породу
+
+
+
+
+
