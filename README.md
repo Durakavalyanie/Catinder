@@ -18,9 +18,9 @@
 
 7.На экране детального описания отображается то же изображение котика, плюс отображается вся информация про породу
 
+Ссылка на скачивание: https://drive.google.com/uc?export=download&id=1WE8u4-z13JiiPwyMFz2dd0c1Zck4i-wd
+
+## Скриншоты
+
 ![](images/int1.jpeg)
 ![](images/int2.jpeg)
-
-
-
-
