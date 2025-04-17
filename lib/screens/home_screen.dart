@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kototinder/models/cat.dart';
 import 'package:kototinder/services/cat_api_service.dart';
 import 'package:kototinder/widgets/like_dislike_button.dart';
+import 'package:kototinder/cubits/liked_cats_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,13 +28,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadInit() async {
-    final cat = await _apiService.fetchRandomCat();
-    final nextCat = await _apiService.fetchRandomCat();
-
-    setState(() {
-      _currentCat = cat;
-      _nextCat = nextCat;
-    });
+    try {
+      final cat = await _apiService.fetchRandomCat();
+      final nextCat = await _apiService.fetchRandomCat();
+      setState(() {
+        _currentCat = cat;
+        _nextCat = nextCat;
+      });
+      if (cat != null) {
+        precacheImage(
+          CachedNetworkImageProvider(cat.imageUrl),
+          context,
+        );
+      }
+      if (nextCat != null) {
+        precacheImage(
+          CachedNetworkImageProvider(nextCat.imageUrl),
+          context,
+        );
+      }
+    } catch (_) {
+      _showErrorDialog();
+    }
   }
 
   void _loadNewCat() async {
@@ -40,8 +57,25 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _currentCat = _nextCat;
       });
+      precacheImage(
+        CachedNetworkImageProvider(_nextCat!.imageUrl),
+        context,
+      );
     }
-    _nextCat = await _apiService.fetchRandomCat();
+    try {
+      final newCat = await _apiService.fetchRandomCat();
+      setState(() {
+        _nextCat = newCat;
+      });
+      if (newCat != null) {
+        precacheImage(
+          CachedNetworkImageProvider(newCat.imageUrl),
+          context,
+        );
+      }
+    } catch (_) {
+      _showErrorDialog();
+    }
   }
 
   void _handleAction({required bool liked}) {
@@ -52,14 +86,36 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Ошибка сети"),
+        content: const Text("Не удалось загрузить данные."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("ОК"),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Кототиндер'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () => Navigator.pushNamed(context, '/liked'),
+          )
+        ],
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/design/background.png"),
             fit: BoxFit.cover,
@@ -79,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onSwipe: (index, previousIndex, direction) {
                         _loadNewCat();
                         if (direction == CardSwiperDirection.right) {
+                          context.read<LikedCatsCubit>().likeCat(_currentCat!);
                           setState(() {
                             _likeCount++;
                           });
@@ -94,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 arguments: _currentCat);
                           },
                           child: Card(
-                            color: Color.fromARGB(255, 238, 201, 187),
+                            color: const Color.fromARGB(255, 238, 201, 187),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
