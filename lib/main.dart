@@ -4,13 +4,20 @@ import 'package:kototinder/screens/home_screen.dart';
 import 'package:kototinder/screens/detail_screen.dart';
 import 'package:kototinder/screens/liked_cats_screen.dart';
 import 'package:kototinder/services/cat_api_service.dart';
+import 'package:kototinder/services/cat_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kototinder/cubits/liked_cats_cubit.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   final getIt = GetIt.instance;
   getIt.registerLazySingleton(() => CatApiService());
-  getIt.registerSingleton<LikedCatsCubit>(LikedCatsCubit());
+  final catStorage = CatStorage();
+  await catStorage.init();
+  getIt.registerSingleton<CatStorage>(catStorage);
+  getIt.registerSingleton<LikedCatsCubit>(LikedCatsCubit(catStorage));
 
   runApp(const KototinderApp());
 }

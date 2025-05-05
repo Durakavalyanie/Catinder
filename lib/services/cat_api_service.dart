@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:kototinder/models/cat.dart';
 
 class CatApiService {
   static const String _baseUrl = 'https://api.thecatapi.com/v1';
-  static const String _apiKey =
-      'live_ESZ9VlBhCsNIaGyACF4EGtCVs7Wt3nwgKBtAn8javyWwrwo98QKwGL95L7qRwrya';
+
+  String get _apiKey => dotenv.env['CAT_API_KEY'] ?? '';
 
   Future<Cat?> fetchRandomCat() async {
     final url = Uri.parse('$_baseUrl/images/search?has_breeds=1');

@@ -16,6 +16,7 @@ migrate_working_dir/
 .idea/
 
 #.vscode/
+.env
 
 **/doc/api/
 **/ios/Flutter/.last_build_id
